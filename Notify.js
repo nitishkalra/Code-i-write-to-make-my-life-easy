@@ -1,4 +1,3 @@
-// const fetch = require('node-fetch');
 //https://cdn-api.co-vin.in/api/v2/admin/location/states
 // By district
 //https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=512&date=31-03-2021
@@ -13,31 +12,12 @@ const nodemailer = require('nodemailer');
 function fetchData(){
     var config = {
         method: 'get',
-        url: 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=496&date=21-05-2021',
+        url: 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=496&date=21-05-2021', // Change Date here
         headers: { 
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
         }
       };
       
-      // axios(config)
-      // .then(function (response) {
-      //   var sessions = response.data.sessions;
-      //   sessions = sessions.filter((session) => {
-      //       if(session.available_capacity > 0 && session.vaccine == "COVAXIN") return true;
-      //       else return false;
-      //   })
-      //   if(sessions.length > 0){
-      //       var info = "";
-      //       sessions.forEach(session => {
-      //           info += session.name + " " + session.address + " " + session.block_name + "\n";
-      //       });
-      //       //console.log(info);
-      //       sendmail('nitishkalra1999@gmail.com','Vaccine available at: \n' + info);
-      //   } else console.log("Not Found");
-      // })
-      // .catch(function (error) {
-      //   console.log(error);
-      // });
       axios(config)
       .then(function (response) {
         var centers =  response.data.centers;
@@ -46,7 +26,7 @@ function fetchData(){
           allSessions = allSessions.concat(center.sessions);
         });
         allSessions = allSessions.filter(session => {
-          if(session.vaccine == "COVAXIN" && session.available_capacity > 0) return true;
+          if(session.vaccine == "COVAXIN" && session.available_capacity > 0) return true; // Change vaccine name of your choice here
           else return false;
         })
         if(allSessions.length > 0){
@@ -55,26 +35,12 @@ function fetchData(){
             allSessions.forEach(session => {
                 info += session.date + "\n";
             });
-          sendmail('nitishkalra1999@gmail.com','Vaccine available at: \n' + info);
+          sendmail('nitishkalra1999@gmail.com','Vaccine available at: \n' + info); // Id to mail to
         }
         else{
           console.log("Not Found");
         }
         } )
-      //   var sessions = response.data.sessions;
-      //   sessions = sessions.filter((session) => {
-      //       if(session.available_capacity > 0 && session.vaccine == "COVAXIN") return true;
-      //       else return false;
-      //   })
-      //   if(sessions.length > 0){
-      //       var info = "";
-      //       sessions.forEach(session => {
-      //           info += session.name + " " + session.address + " " + session.block_name + "\n";
-      //       });
-      //       //console.log(info);
-      //       sendmail('nitishkalra1999@gmail.com','Vaccine available at: \n' + info);
-      //   } else console.log("Not Found");
-      // })
       .catch(function (error) {
         console.log(error);
       });
@@ -85,13 +51,13 @@ let transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
 		user: 'nitishkalra1998@gmail.com',
-		pass: '20020809me'
+		pass: 'EnterPasswordHere'
 	}
 });
 sendmail = (id, text) => {
 	transporter.sendMail(
 		{
-			from: 'nitishkalra1998@gmail.com',
+			from: 'nitishkalra1998@gmail.com', // Id to mail from
 			to: id,
 			subject: 'vaccine available',
 			text: text
@@ -104,7 +70,6 @@ sendmail = (id, text) => {
 };
 
 function fetchDataEveryMinute(){
-    setInterval(fetchData,300000);
+    setInterval(fetchData,300000); // Change interval according to your choice here
 }
 fetchDataEveryMinute();
-//fetchData();
